@@ -1,37 +1,35 @@
 package com.example.hemolinkbackend.entity;
 
 import com.example.hemolinkbackend.enums.GroupeSanguin;
+import com.example.hemolinkbackend.enums.StatutSang;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
 
 import java.time.LocalDate;
 
 @Entity
-public class Donneur {
+public class PocheSang {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "user_id", unique = true)
-    private Utilisateur utilisateur;
+    @ManyToOne
+    private Don don;
 
     @Enumerated(EnumType.STRING)
     private GroupeSanguin groupeSanguin;
 
-    private LocalDate dateNaissance;
+    private LocalDate dateCollecte;
 
-    private Double poids;
+    private LocalDate dateExpiration;
 
-    private LocalDate dateDernierDon;
-
-    private Integer nombreDonsAnnuel;
+    @Enumerated(EnumType.STRING)
+    private StatutSang statut;
 }
 

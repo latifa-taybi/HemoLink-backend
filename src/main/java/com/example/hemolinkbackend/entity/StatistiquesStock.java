@@ -7,31 +7,25 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
 
 import java.time.LocalDate;
 
 @Entity
-public class Donneur {
+public class StatistiquesStock {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "user_id", unique = true)
-    private Utilisateur utilisateur;
-
     @Enumerated(EnumType.STRING)
     private GroupeSanguin groupeSanguin;
 
-    private LocalDate dateNaissance;
+    private Integer unitesTotales;
 
-    private Double poids;
+    private Integer unitesExpirees;
 
-    private LocalDate dateDernierDon;
+    private Integer unitesTransfusees;
 
-    private Integer nombreDonsAnnuel;
+    private LocalDate dateGeneration;
 }
 
