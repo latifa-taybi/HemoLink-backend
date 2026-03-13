@@ -10,6 +10,7 @@ import com.example.hemolinkbackend.service.UtilisateurService;
 import com.example.hemolinkbackend.service.exception.RegleMetierException;
 import com.example.hemolinkbackend.service.exception.RessourceNonTrouveeException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,11 +24,16 @@ public class UtilisateurServiceImpl implements UtilisateurService {
 
     private final UtilisateurRepository utilisateurRepository;
     private final UtilisateurMapper utilisateurMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public UtilisateurResponseDto creer(UtilisateurDto dto) {
         verifierEmailUnique(dto.email(), null);
+        if (dto.motDePasse() == null || dto.motDePasse().isBlank()) {
+            throw new RegleMetierException("Le mot de passe est obligatoire.");
+        }
         Utilisateur utilisateur = utilisateurMapper.toEntity(dto);
+        utilisateur.setMotDePasse(passwordEncoder.encode(dto.motDePasse()));
         utilisateur.setActif(dto.actif() == null || dto.actif());
         utilisateur.setCreeLe(LocalDateTime.now());
         return utilisateurMapper.toResponseDto(utilisateurRepository.save(utilisateur));
@@ -38,12 +44,22 @@ public class UtilisateurServiceImpl implements UtilisateurService {
         Utilisateur utilisateur = getEntityById(id);
         boolean actifActuel = utilisateur.isActif();
         LocalDateTime creeLeActuel = utilisateur.getCreeLe();
+        String motDePasseActuel = utilisateur.getMotDePasse();
+
         verifierEmailUnique(dto.email(), id);
         utilisateurMapper.updateEntity(dto, utilisateur);
+
         if (dto.actif() == null) {
             utilisateur.setActif(actifActuel);
         }
         utilisateur.setCreeLe(creeLeActuel);
+
+        if (dto.motDePasse() == null || dto.motDePasse().isBlank()) {
+            utilisateur.setMotDePasse(motDePasseActuel);
+        } else {
+            utilisateur.setMotDePasse(passwordEncoder.encode(dto.motDePasse()));
+        }
+
         return utilisateurMapper.toResponseDto(utilisateurRepository.save(utilisateur));
     }
 

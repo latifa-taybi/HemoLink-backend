@@ -18,21 +18,13 @@ public class CentreCollecte {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String nom;
-
     private String adresse;
-
     private String ville;
-
     private Double latitude;
-
     private Double longitude;
-
     @Column(columnDefinition = "geography(Point,4326)")
     private Point localisationGps;
-
     private String horairesOuverture;
-
     private String telephone;
 }
