@@ -1,18 +1,24 @@
 package com.example.hemolinkbackend.config;
 
+import com.example.hemolinkbackend.security.JwtTokenFilter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableMethodSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final JwtTokenFilter jwtTokenFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -25,14 +31,15 @@ public class SecurityConfig {
                                 "/v3/api-docs/**",
                                 "/webjars/**"
                         ).permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/utilisateurs").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
                         .requestMatchers("/api/utilisateurs/**", "/api/statistiques-stock/**").hasRole("ADMIN")
                         .requestMatchers("/api/tests-labo/**").hasAnyRole("TECHNICIEN_LABO", "ADMIN")
                         .requestMatchers("/api/commandes-sang/**", "/api/elements-commandes/**", "/api/hopitaux/**")
                         .hasAnyRole("PERSONNEL_HOPITAL", "ADMIN")
                         .anyRequest().authenticated()
                 )
-                .httpBasic(Customizer.withDefaults())
-                .formLogin(AbstractHttpConfigurer::disable);
+                .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -42,4 +49,3 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 }
-
