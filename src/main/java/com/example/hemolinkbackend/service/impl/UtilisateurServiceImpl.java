@@ -1,5 +1,6 @@
 package com.example.hemolinkbackend.service.impl;
 
+import com.example.hemolinkbackend.dto.request.InscriptionDto;
 import com.example.hemolinkbackend.dto.request.UtilisateurDto;
 import com.example.hemolinkbackend.dto.response.UtilisateurResponseDto;
 import com.example.hemolinkbackend.entity.Utilisateur;
@@ -25,6 +26,24 @@ public class UtilisateurServiceImpl implements UtilisateurService {
     private final UtilisateurRepository utilisateurRepository;
     private final UtilisateurMapper utilisateurMapper;
     private final PasswordEncoder passwordEncoder;
+
+    @Override
+    public UtilisateurResponseDto sinscrire(InscriptionDto dto) {
+        verifierEmailUnique(dto.email(), null);
+        if (dto.motDePasse() == null || dto.motDePasse().isBlank()) {
+            throw new RegleMetierException("Le mot de passe est obligatoire.");
+        }
+        Utilisateur utilisateur = new Utilisateur();
+        utilisateur.setPrenom(dto.prenom());
+        utilisateur.setNom(dto.nom());
+        utilisateur.setEmail(dto.email());
+        utilisateur.setTelephone(dto.telephone());
+        utilisateur.setMotDePasse(passwordEncoder.encode(dto.motDePasse()));
+        utilisateur.setRole(RoleUtilisateur.DONNEUR);
+        utilisateur.setActif(true);
+        utilisateur.setCreeLe(LocalDateTime.now());
+        return utilisateurMapper.toResponseDto(utilisateurRepository.save(utilisateur));
+    }
 
     @Override
     public UtilisateurResponseDto creer(UtilisateurDto dto) {

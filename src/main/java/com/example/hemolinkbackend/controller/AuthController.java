@@ -1,10 +1,13 @@
 package com.example.hemolinkbackend.controller;
 
 import com.example.hemolinkbackend.dto.request.AuthLoginDto;
+import com.example.hemolinkbackend.dto.request.InscriptionDto;
 import com.example.hemolinkbackend.dto.response.AuthTokenResponseDto;
+import com.example.hemolinkbackend.dto.response.UtilisateurResponseDto;
 import com.example.hemolinkbackend.entity.Utilisateur;
 import com.example.hemolinkbackend.repository.UtilisateurRepository;
 import com.example.hemolinkbackend.security.JwtTokenProvider;
+import com.example.hemolinkbackend.service.UtilisateurService;
 import com.example.hemolinkbackend.service.exception.RessourceNonTrouveeException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,9 +27,16 @@ public class AuthController {
     private final UtilisateurRepository utilisateurRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
+    private final UtilisateurService utilisateurService;
 
     @Value("${jwt.expiration}")
     private long jwtExpiration;
+
+    @PostMapping("/inscription")
+    @ResponseStatus(HttpStatus.CREATED)
+    public UtilisateurResponseDto inscription(@RequestBody InscriptionDto dto) {
+        return utilisateurService.sinscrire(dto);
+    }
 
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)

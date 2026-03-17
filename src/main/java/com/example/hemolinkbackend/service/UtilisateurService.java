@@ -1,5 +1,6 @@
 package com.example.hemolinkbackend.service;
 
+import com.example.hemolinkbackend.dto.request.InscriptionDto;
 import com.example.hemolinkbackend.dto.request.UtilisateurDto;
 import com.example.hemolinkbackend.dto.response.UtilisateurResponseDto;
 import com.example.hemolinkbackend.enums.RoleUtilisateur;
@@ -7,6 +8,8 @@ import com.example.hemolinkbackend.enums.RoleUtilisateur;
 import java.util.List;
 
 public interface UtilisateurService {
+
+    UtilisateurResponseDto sinscrire(InscriptionDto dto);
 
     UtilisateurResponseDto creer(UtilisateurDto dto);
 
