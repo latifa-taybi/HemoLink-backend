@@ -37,14 +37,15 @@ public class SecurityConfig {
                                 "/swagger-ui.html",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
-                                "/webjars/**"
+                                "/webjars/**",
+                                "/api"
                         ).permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/auth/inscription").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
-                        .requestMatchers("/api/utilisateurs/**", "/api/statistiques-stock/**").hasRole("ADMIN")
-                        .requestMatchers("/api/tests-labo/**").hasAnyRole("TECHNICIEN_LABO", "ADMIN")
-                        .requestMatchers("/api/commandes-sang/**", "/api/elements-commandes/**", "/api/hopitaux/**")
-                        .hasAnyRole("PERSONNEL_HOPITAL", "ADMIN")
+//                        .requestMatchers(HttpMethod.POST, "/api/auth/inscription").permitAll()
+//                        .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
+//                        .requestMatchers("/api/utilisateurs/**", "/api/statistiques-stock/**").hasRole("ADMIN")
+//                        .requestMatchers("/api/tests-labo/**").hasAnyRole("TECHNICIEN_LABO", "ADMIN")
+//                        .requestMatchers("/api/commandes-sang/**", "/api/elements-commandes/**", "/api/hopitaux/**")
+//                        .hasAnyRole("PERSONNEL_HOPITAL", "ADMIN")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
