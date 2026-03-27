@@ -27,7 +27,17 @@ public class CentreCollecteServiceImpl implements CentreCollecteService {
     public CentreCollecteResponseDto creer(CentreCollecteDto dto) {
         log.info("Création d'un centre de collecte: {}", dto.nom());
         CentreCollecte centre = centreCollecteMapper.toEntity(dto);
+
+        // ✅ Initialiser localisationGps à partir de latitude/longitude
+        centre.initializeLocalization();
+        log.debug("LocalisationGps initialisée: {}", centre.getLocalisationGps());
+
+        // ✅ Initialiser horairesOuverture avec un tableau vide par défaut
+        centre.initializeHorairesOuverture();
+        log.debug("HorairesOuverture initialisés: {}", centre.getHorairesOuverture());
+
         CentreCollecte saved = centreCollecteRepository.save(centre);
+        log.info("Centre créé avec ID: {}", saved.getId());
         return centreCollecteMapper.toResponseDto(saved);
     }
 
@@ -53,7 +63,12 @@ public class CentreCollecteServiceImpl implements CentreCollecteService {
         log.info("Mise à jour du centre ID: {}", id);
         CentreCollecte centre = getEntityById(id);
         centreCollecteMapper.updateEntity(dto, centre);
+
+        centre.initializeLocalization();
+        log.debug("LocalisationGps réinitialisée: {}", centre.getLocalisationGps());
+
         CentreCollecte updated = centreCollecteRepository.save(centre);
+        log.info("Centre ID: {} mis à jour", id);
         return centreCollecteMapper.toResponseDto(updated);
     }
 
