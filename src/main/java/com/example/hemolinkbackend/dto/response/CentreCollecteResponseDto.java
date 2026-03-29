@@ -1,4 +1,5 @@
 package com.example.hemolinkbackend.dto.response;
+import java.util.List;
 
 public record CentreCollecteResponseDto(
         Long id,
@@ -7,7 +8,7 @@ public record CentreCollecteResponseDto(
         String ville,
         Double latitude,
         Double longitude,
-        String horairesOuverture,
+        List<HoraireResponseDto> horaires,
         String telephone
 ) {
 }

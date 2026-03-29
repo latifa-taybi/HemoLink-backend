@@ -1,4 +1,6 @@
 package com.example.hemolinkbackend.dto.request;
+import java.util.List;
+import com.example.hemolinkbackend.dto.request.HoraireDto;
 
 public record CentreCollecteDto(
         String nom,
@@ -6,7 +8,7 @@ public record CentreCollecteDto(
         String ville,
         Double latitude,
         Double longitude,
-        String horairesOuverture,
+        List<HoraireDto> horaires,
         String telephone
 ) {
 }

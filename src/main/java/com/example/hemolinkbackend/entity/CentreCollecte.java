@@ -1,15 +1,14 @@
 package com.example.hemolinkbackend.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -29,8 +28,9 @@ public class CentreCollecte {
     @Column(columnDefinition = "geography(Point,4326)", nullable = true)
     private Point localisationGps;
 
-    @Column(columnDefinition = "TEXT", nullable = true)
-    private String horairesOuverture;
+    // ✅ Nouvelle relation OneToMany avec Horaire
+    @OneToMany(mappedBy = "centreCollecte", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Horaire> horaires = new ArrayList<>();
 
     private String telephone;
 
@@ -44,10 +44,30 @@ public class CentreCollecte {
         }
     }
 
-    // ✅ Initialiser horairesOuverture avec un tableau vide par défaut
-    public void initializeHorairesOuverture() {
-        if (this.horairesOuverture == null) {
-            this.horairesOuverture = "[]";
+    // ✅ Méthode pour initialiser les horaires par défaut (7 jours)
+    public void initializeHorairesParDefaut() {
+        if (this.horaires == null || this.horaires.isEmpty()) {
+            String[] jours = {"LUNDI", "MARDI", "MERCREDI", "JEUDI", "VENDREDI", "SAMEDI", "DIMANCHE"};
+
+            for (String jour : jours) {
+                Horaire horaire = new Horaire();
+                horaire.setJour(jour);
+                horaire.setCentreCollecte(this);
+
+                if (jour.equals("DIMANCHE")) {
+                    // Dimanche: fermé
+                    horaire.setOuvert(false);
+                    horaire.setOuverture(java.time.LocalTime.of(9, 0));
+                    horaire.setFermeture(java.time.LocalTime.of(13, 0));
+                } else {
+                    // Autres jours: 8h-17h
+                    horaire.setOuvert(true);
+                    horaire.setOuverture(java.time.LocalTime.of(8, 0));
+                    horaire.setFermeture(java.time.LocalTime.of(17, 0));
+                }
+
+                this.horaires.add(horaire);
+            }
         }
     }
 }
