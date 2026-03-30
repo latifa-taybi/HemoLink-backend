@@ -26,6 +26,10 @@ public class CommandeSang {
     @ManyToOne
     private Hopital hopital;
 
+    /** Centre de collecte qui doit traiter et préparer la commande */
+    @ManyToOne
+    private CentreCollecte centreCollecte;
+
     @Enumerated(EnumType.STRING)
     private GroupeSanguin groupeSanguin;
 

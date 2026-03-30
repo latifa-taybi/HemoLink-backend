@@ -15,6 +15,8 @@ public interface CommandeSangService {
 
     List<CommandeSangResponseDto> getByHopital(Long hopitalId);
 
+    List<CommandeSangResponseDto> getParCentre(Long centreCollecteId);
+
     List<CommandeSangResponseDto> getUrgencesActives();
 
     CommandeSangResponseDto preparerCommande(Long id);
@@ -25,3 +27,4 @@ public interface CommandeSangService {
 
     CommandeSangResponseDto annulerCommande(Long id);
 }
+

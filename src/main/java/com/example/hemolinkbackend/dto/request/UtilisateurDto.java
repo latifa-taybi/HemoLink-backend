@@ -9,6 +9,8 @@ public record UtilisateurDto(
         String motDePasse,
         String telephone,
         RoleUtilisateur role,
+        Long centreCollecteId,
+        Long hopitalId,
         Boolean actif
 ) {
 }

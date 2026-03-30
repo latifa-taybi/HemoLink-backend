@@ -44,31 +44,14 @@ public class CentreCollecte {
         }
     }
 
-    // ✅ Méthode pour initialiser les horaires par défaut (7 jours)
-    public void initializeHorairesParDefaut() {
-        if (this.horaires == null || this.horaires.isEmpty()) {
-            String[] jours = {"LUNDI", "MARDI", "MERCREDI", "JEUDI", "VENDREDI", "SAMEDI", "DIMANCHE"};
+    public void addHoraire(Horaire horaire) {
+        horaires.add(horaire);
+        horaire.setCentreCollecte(this);
+    }
 
-            for (String jour : jours) {
-                Horaire horaire = new Horaire();
-                horaire.setJour(jour);
-                horaire.setCentreCollecte(this);
-
-                if (jour.equals("DIMANCHE")) {
-                    // Dimanche: fermé
-                    horaire.setOuvert(false);
-                    horaire.setOuverture(java.time.LocalTime.of(9, 0));
-                    horaire.setFermeture(java.time.LocalTime.of(13, 0));
-                } else {
-                    // Autres jours: 8h-17h
-                    horaire.setOuvert(true);
-                    horaire.setOuverture(java.time.LocalTime.of(8, 0));
-                    horaire.setFermeture(java.time.LocalTime.of(17, 0));
-                }
-
-                this.horaires.add(horaire);
-            }
-        }
+    public void removeHoraire(Horaire horaire) {
+        horaires.remove(horaire);
+        horaire.setCentreCollecte(null);
     }
 }
 

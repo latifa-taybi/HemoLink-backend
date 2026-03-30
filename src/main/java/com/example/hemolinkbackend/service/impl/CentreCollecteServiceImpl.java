@@ -29,10 +29,23 @@
             CentreCollecte centre = centreCollecteMapper.toEntity(dto);
             centre.initializeLocalization();
 
-            if (centre.getHoraires() != null && !centre.getHoraires().isEmpty()) {
-                centre.getHoraires().forEach(h -> h.setCentreCollecte(centre));
+            if (centre.getHoraires() == null || centre.getHoraires().isEmpty()) {
+                for (java.time.DayOfWeek day : java.time.DayOfWeek.values()) {
+                    com.example.hemolinkbackend.entity.Horaire horaire = new com.example.hemolinkbackend.entity.Horaire();
+                    horaire.setJour(day.name());
+                    if (day == java.time.DayOfWeek.SUNDAY) {
+                        horaire.setOuvert(false);
+                        horaire.setOuverture(null);
+                        horaire.setFermeture(null);
+                    } else {
+                        horaire.setOuvert(true);
+                        horaire.setOuverture(java.time.LocalTime.of(8, 0));
+                        horaire.setFermeture(java.time.LocalTime.of(17, 0));
+                    }
+                    centre.addHoraire(horaire);
+                }
             } else {
-                centre.initializeHorairesParDefaut();
+                centre.getHoraires().forEach(h -> h.setCentreCollecte(centre));
             }
 
             CentreCollecte saved = centreCollecteRepository.save(centre);

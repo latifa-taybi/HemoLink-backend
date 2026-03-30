@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -37,6 +38,12 @@ public class Utilisateur {
 
     @Enumerated(EnumType.STRING)
     private RoleUtilisateur role;
+
+    @ManyToOne
+    private CentreCollecte centreCollecte;
+
+    @ManyToOne
+    private Hopital hopital;
 
     private boolean actif;
 

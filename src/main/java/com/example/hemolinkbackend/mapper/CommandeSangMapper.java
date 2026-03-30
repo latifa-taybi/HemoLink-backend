@@ -12,12 +12,15 @@ public interface CommandeSangMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "hopital.id", source = "hopitalId")
+    @Mapping(target = "centreCollecte.id", source = "centreCollecteId")
     CommandeSang toEntity(CommandeSangDto dto);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "hopital.id", source = "hopitalId")
+    @Mapping(target = "centreCollecte.id", source = "centreCollecteId")
     void updateEntity(CommandeSangDto dto, @MappingTarget CommandeSang entity);
 
     @Mapping(target = "hopitalId", source = "hopital.id")
+    @Mapping(target = "centreCollecteId", source = "centreCollecte.id")
     CommandeSangResponseDto toResponseDto(CommandeSang entity);
 }

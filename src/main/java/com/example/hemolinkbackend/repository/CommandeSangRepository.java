@@ -14,6 +14,9 @@ public interface CommandeSangRepository extends JpaRepository<CommandeSang, Long
 
     List<CommandeSang> findByStatutOrderByDateCommandeDesc(StatutCommande statut);
 
+    /** Toutes les commandes destinées à un centre de collecte donné */
+    List<CommandeSang> findByCentreCollecteIdOrderByDateCommandeDesc(Long centreCollecteId);
+
     @Query("""
             select c
             from CommandeSang c

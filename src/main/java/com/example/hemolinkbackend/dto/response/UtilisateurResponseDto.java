@@ -11,6 +11,8 @@ public record UtilisateurResponseDto(
         String email,
         String telephone,
         RoleUtilisateur role,
+        Long centreCollecteId,
+        Long hopitalId,
         Boolean actif,
         LocalDateTime creeLe
 ) {

@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 public record CommandeSangResponseDto(
         Long id,
         Long hopitalId,
+        Long centreCollecteId,
         GroupeSanguin groupeSanguin,
         Integer quantite,
         Boolean urgence,

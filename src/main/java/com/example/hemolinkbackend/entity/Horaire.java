@@ -6,6 +6,9 @@ import java.time.LocalTime;
 @Entity
 @Getter
 @Setter
+@Table(uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"centre_collecte_id", "jour"})
+})
 public class Horaire {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
