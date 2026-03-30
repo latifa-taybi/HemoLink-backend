@@ -13,7 +13,6 @@ import com.example.hemolinkbackend.enums.RoleUtilisateur;
 import com.example.hemolinkbackend.repository.UtilisateurRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -22,8 +21,7 @@ import java.time.LocalDate;
 
 @Configuration
 @RequiredArgsConstructor
-@Slf4j
-@Order(2) // Run after SecurityDataInitializer
+@Order(2)
 public class DataInitializer implements CommandLineRunner {
 
     private final HopitalRepository hopitalRepository;
@@ -34,28 +32,25 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
+        createDefaultAdmin();
+        
         if (hopitalRepository.count() == 0) {
-            log.info("Initialisation des données de test pour les hôpitaux...");
             Hopital hopital = new Hopital();
             hopital.setNom("Hôpital Moulay Youssef");
             hopital.setAdresse("Quartier des Hôpitaux");
             hopital.setVille("Casablanca");
             hopital.setTelephone("0522000000");
             hopitalRepository.save(hopital);
-            log.info("Hôpital par défaut créé: {}", hopital.getNom());
         }
 
         if (centreCollecteRepository.count() == 0) {
-            log.info("Initialisation des données de test pour les centres de collecte...");
             CentreCollecte centre = new CentreCollecte();
             centre.setNom("CRTS Casablanca");
             centre.setAdresse("Rue Mohamed Abdou");
             centre.setVille("Casablanca");
             centre.setTelephone("0522111111");
             centre = centreCollecteRepository.save(centre);
-            log.info("Centre de collecte par défaut créé: {}", centre.getNom());
             
-            // Création d'un compte de test pour ce centre
             if (!utilisateurRepository.existsByEmailIgnoreCase("accueil@crts.local")) {
                 Utilisateur personnelCentre = new Utilisateur();
                 personnelCentre.setPrenom("Accueil");
@@ -68,16 +63,13 @@ public class DataInitializer implements CommandLineRunner {
                 personnelCentre.setMotDePasse(passwordEncoder.encode("Crts@123"));
                 personnelCentre.setCreeLe(LocalDate.now().atStartOfDay());
                 utilisateurRepository.save(personnelCentre);
-                log.info("Compte personnel de centre créé: accueil@crts.local / Crts@123");
             }
         }
 
         if (pocheSangRepository.count() == 0) {
-            log.info("Initialisation de quelques poches de sang pour le stock...");
             seedPoche(GroupeSanguin.A_POS, 10);
             seedPoche(GroupeSanguin.O_NEG, 5);
             seedPoche(GroupeSanguin.B_POS, 8);
-            log.info("Stock de poches de sang initialisé.");
         }
     }
 
@@ -90,5 +82,24 @@ public class DataInitializer implements CommandLineRunner {
             poche.setDateExpiration(LocalDate.now().plusDays(40));
             pocheSangRepository.save(poche);
         }
+    }
+
+    private void createDefaultAdmin() {
+        String adminEmail = "admin@hemolink.com";
+        
+        if (utilisateurRepository.findByEmailIgnoreCase(adminEmail).isPresent()) {
+            return;
+        }
+
+        Utilisateur admin = new Utilisateur();
+        admin.setPrenom("Administrateur");
+        admin.setNom("HémoLink");
+        admin.setEmail(adminEmail);
+        admin.setTelephone("0600000000");
+        admin.setMotDePasse(passwordEncoder.encode("admin123"));
+        admin.setRole(RoleUtilisateur.ADMIN);
+        admin.setActif(true);
+        admin.setCreeLe(LocalDate.now().atStartOfDay());
+        utilisateurRepository.save(admin);
     }
 }

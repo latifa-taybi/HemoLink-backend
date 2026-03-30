@@ -7,11 +7,12 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-@Mapper(componentModel = "spring", uses = HoraireMapper.class)
+@Mapper(componentModel = "spring", uses = {HoraireMapper.class, HoraireInitializer.class})
 public interface CentreCollecteMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "localisationGps", ignore = true)
+    @Mapping(target = "horaires", source = "horaires")
     CentreCollecte toEntity(CentreCollecteDto dto);
 
     @Mapping(target = "id", ignore = true)
