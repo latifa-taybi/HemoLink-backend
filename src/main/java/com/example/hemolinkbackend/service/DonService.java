@@ -17,6 +17,8 @@ public interface DonService {
 
     List<DonResponseDto> getHistoriqueDonneur(Long donneurId);
 
+    List<DonResponseDto> getDonsByCentre(Long centreId);
+
     List<DonResponseDto> getParCentreEtPeriode(Long centreId, LocalDateTime debut, LocalDateTime fin);
 
     long compterDonsAnneeEnCours(Long donneurId);

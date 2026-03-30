@@ -52,6 +52,11 @@ public class DonController {
         return donService.getHistoriqueDonneur(donneurId);
     }
 
+    @GetMapping("/centre/{centreId}")
+    public List<DonResponseDto> donsByCentre(@PathVariable Long centreId) {
+        return donService.getDonsByCentre(centreId);
+    }
+
     @GetMapping("/donneur/{donneurId}/compteur-annuel")
     public Map<String, Object> compteurAnnuel(@PathVariable Long donneurId) {
         return Map.of("donneurId", donneurId, "count", donService.compterDonsAnneeEnCours(donneurId));

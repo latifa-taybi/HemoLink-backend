@@ -10,6 +10,8 @@ public interface DonRepository extends JpaRepository<Don, Long> {
 
     List<Don> findByDonneurIdOrderByDateDonDesc(Long donneurId);
 
+    List<Don> findByCentreId(Long centreId);
+
     List<Don> findByCentreIdAndDateDonBetween(Long centreId, LocalDateTime debut, LocalDateTime fin);
 
     long countByDonneurIdAndDateDonBetween(Long donneurId, LocalDateTime debut, LocalDateTime fin);

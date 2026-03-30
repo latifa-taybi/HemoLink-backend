@@ -62,6 +62,16 @@ public class DonServiceImpl implements DonService {
 
     @Override
     @Transactional(readOnly = true)
+    public List<DonResponseDto> getDonsByCentre(Long centreId) {
+        log.debug("Récupération des dons du centre ID: {}", centreId);
+        return donRepository.findByCentreId(centreId)
+                .stream()
+                .map(donMapper::toResponseDto)
+                .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public List<DonResponseDto> getParCentreEtPeriode(Long centreId, LocalDateTime debut, LocalDateTime fin) {
         log.debug("Récupération des dons du centre ID: {}", centreId);
         return donRepository.findAll()

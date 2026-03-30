@@ -6,6 +6,9 @@ import com.example.hemolinkbackend.enums.RoleUtilisateur;
 import com.example.hemolinkbackend.service.UtilisateurService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,6 +28,18 @@ import java.util.List;
 public class UtilisateurController {
 
     private final UtilisateurService utilisateurService;
+
+    @GetMapping("/me")
+    public ResponseEntity<UtilisateurResponseDto> getCurrentUser() {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || authentication.getPrincipal() == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        
+        var userDetails = (UserDetails) authentication.getPrincipal();
+        var utilisateur = utilisateurService.getByEmail(userDetails.getUsername());
+        return ResponseEntity.ok(utilisateur);
+    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
