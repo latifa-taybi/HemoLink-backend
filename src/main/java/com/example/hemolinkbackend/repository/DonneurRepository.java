@@ -12,12 +12,6 @@ public interface DonneurRepository extends JpaRepository<Donneur, Long> {
 
     Optional<Donneur> findByUtilisateurId(Long utilisateurId);
 
-    List<Donneur> findByGroupeSanguin(GroupeSanguin groupeSanguin);
 
-    List<Donneur> findByDateDernierDonBefore(LocalDate date);
-
-    List<Donneur> findByNombreDonsAnnuelLessThan(Integer limite);
-
-    List<Donneur> findByUtilisateurNomContainingIgnoreCaseOrUtilisateurPrenomContainingIgnoreCase(String nom, String prenom);
 }
 

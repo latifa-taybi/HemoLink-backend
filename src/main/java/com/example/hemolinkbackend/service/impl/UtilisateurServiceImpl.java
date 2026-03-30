@@ -4,8 +4,10 @@ import com.example.hemolinkbackend.dto.request.InscriptionDto;
 import com.example.hemolinkbackend.dto.request.UtilisateurDto;
 import com.example.hemolinkbackend.dto.response.UtilisateurResponseDto;
 import com.example.hemolinkbackend.entity.Utilisateur;
+import com.example.hemolinkbackend.entity.Donneur;
 import com.example.hemolinkbackend.enums.RoleUtilisateur;
 import com.example.hemolinkbackend.mapper.UtilisateurMapper;
+import com.example.hemolinkbackend.repository.DonneurRepository;
 import com.example.hemolinkbackend.repository.UtilisateurRepository;
 import com.example.hemolinkbackend.service.UtilisateurService;
 import com.example.hemolinkbackend.service.exception.RegleMetierException;
@@ -24,6 +26,7 @@ import java.util.List;
 public class UtilisateurServiceImpl implements UtilisateurService {
 
     private final UtilisateurRepository utilisateurRepository;
+    private final DonneurRepository donneurRepository;
     private final UtilisateurMapper utilisateurMapper;
     private final PasswordEncoder passwordEncoder;
 
@@ -42,7 +45,16 @@ public class UtilisateurServiceImpl implements UtilisateurService {
         utilisateur.setRole(RoleUtilisateur.DONNEUR);
         utilisateur.setActif(true);
         utilisateur.setCreeLe(LocalDateTime.now());
-        return utilisateurMapper.toResponseDto(utilisateurRepository.save(utilisateur));
+        Utilisateur savedUser = utilisateurRepository.save(utilisateur);
+        
+        // Automatiquement créer un profil donneur pour le rôle DONNEUR
+        if (savedUser.getRole() == RoleUtilisateur.DONNEUR) {
+            Donneur donneur = new Donneur();
+            donneur.setUtilisateur(savedUser);
+            donneurRepository.save(donneur);
+        }
+        
+        return utilisateurMapper.toResponseDto(savedUser);
     }
 
     @Override
@@ -55,7 +67,16 @@ public class UtilisateurServiceImpl implements UtilisateurService {
         utilisateur.setMotDePasse(passwordEncoder.encode(dto.motDePasse()));
         utilisateur.setActif(dto.actif() == null || dto.actif());
         utilisateur.setCreeLe(LocalDateTime.now());
-        return utilisateurMapper.toResponseDto(utilisateurRepository.save(utilisateur));
+        Utilisateur savedUser = utilisateurRepository.save(utilisateur);
+        
+        // Automatiquement créer un profil donneur pour le rôle DONNEUR
+        if (savedUser.getRole() == RoleUtilisateur.DONNEUR) {
+            Donneur donneur = new Donneur();
+            donneur.setUtilisateur(savedUser);
+            donneurRepository.save(donneur);
+        }
+        
+        return utilisateurMapper.toResponseDto(savedUser);
     }
 
     @Override

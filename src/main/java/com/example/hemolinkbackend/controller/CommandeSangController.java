@@ -36,9 +36,7 @@ public class CommandeSangController {
     }
 
     @GetMapping
-    public List<CommandeSangResponseDto> getAll(
-            @RequestParam(required = false) Long hopitalId,
-            @RequestParam(required = false) Long centreId) {
+    public List<CommandeSangResponseDto> getAll(@RequestParam(required = false) Long hopitalId, @RequestParam(required = false) Long centreId) {
         if (hopitalId != null) return commandeSangService.getByHopital(hopitalId);
         if (centreId != null) return commandeSangService.getParCentre(centreId);
         return commandeSangService.getAll();

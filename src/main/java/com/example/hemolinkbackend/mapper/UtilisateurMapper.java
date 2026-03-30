@@ -11,7 +11,6 @@ import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface UtilisateurMapper {
-
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "creeLe", ignore = true)
     @Mapping(target = "centreCollecte", source = "centreCollecteId")

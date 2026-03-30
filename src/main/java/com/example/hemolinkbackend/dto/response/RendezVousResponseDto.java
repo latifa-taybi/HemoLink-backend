@@ -7,6 +7,8 @@ import java.time.LocalDateTime;
 public record RendezVousResponseDto(
         Long id,
         Long donneurId,
+        String donneurPrenom,
+        String donneurNom,
         Long centreId,
         LocalDateTime dateRendezVous,
         StatutRendezVous statut

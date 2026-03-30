@@ -8,20 +8,12 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Classe utilitaire pour initialiser les horaires par défaut d'un centre de collecte
- */
 @Component
 public class HoraireInitializer {
 
     private static final LocalTime HEURE_OUVERTURE_DEFAULT = LocalTime.of(8, 0);
     private static final LocalTime HEURE_FERMETURE_DEFAULT = LocalTime.of(17, 0);
 
-    /**
-     * Crée une liste d'horaires par défaut pour les 7 jours de la semaine
-     * Lundi à Samedi: 8h-17h
-     * Dimanche: Fermé
-     */
     public List<Horaire> createDefaultHoraires() {
         List<Horaire> horaires = new ArrayList<>();
         String[] jours = {"LUNDI", "MARDI", "MERCREDI", "JEUDI", "VENDREDI", "SAMEDI", "DIMANCHE"};
@@ -46,9 +38,6 @@ public class HoraireInitializer {
         return horaires;
     }
 
-    /**
-     * Crée une liste de DTOs d'horaires par défaut
-     */
     public List<HoraireDto> createDefaultHorairesDto() {
         List<HoraireDto> horaires = new ArrayList<>();
         String[] jours = {"LUNDI", "MARDI", "MERCREDI", "JEUDI", "VENDREDI", "SAMEDI", "DIMANCHE"};

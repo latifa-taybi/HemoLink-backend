@@ -26,9 +26,7 @@ public class HoraireJsonConverter {
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
     }
 
-    /**
-     * Convertit une chaîne JSON en liste d'horaires
-     */
+
     public List<Horaire> jsonToHoraires(String json) {
         if (json == null || json.isEmpty() || "[]".equals(json)) {
             return new ArrayList<>();
@@ -43,9 +41,7 @@ public class HoraireJsonConverter {
         }
     }
 
-    /**
-     * Convertit une liste d'horaires en chaîne JSON
-     */
+
     public String horairesToJson(List<Horaire> horaires) {
         if (horaires == null || horaires.isEmpty()) {
             return "[]";
@@ -59,9 +55,7 @@ public class HoraireJsonConverter {
         }
     }
 
-    /**
-     * Convertit une liste de DTOs horaires en chaîne JSON
-     */
+
     public String horaireDtosToJson(List<HoraireDto> horaires) {
         if (horaires == null || horaires.isEmpty()) {
             return "[]";
@@ -75,9 +69,7 @@ public class HoraireJsonConverter {
         }
     }
 
-    /**
-     * Parse une chaîne JSON en liste de HoraireDto
-     */
+
     public List<HoraireDto> jsonToHoraireDtos(String json) {
         if (json == null || json.isEmpty() || "[]".equals(json)) {
             return new ArrayList<>();

@@ -35,9 +35,8 @@ public class UtilisateurController {
         if (authentication == null || authentication.getPrincipal() == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        
-        var userDetails = (UserDetails) authentication.getPrincipal();
-        var utilisateur = utilisateurService.getByEmail(userDetails.getUsername());
+        String email = authentication.getPrincipal().toString();
+        var utilisateur = utilisateurService.getByEmail(email);
         return ResponseEntity.ok(utilisateur);
     }
 

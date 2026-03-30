@@ -21,6 +21,8 @@ public interface RendezVousMapper {
     void updateEntity(RendezVousDto dto, @MappingTarget RendezVous entity);
 
     @Mapping(target = "donneurId", source = "donneur.id")
+    @Mapping(target = "donneurPrenom", source = "donneur.utilisateur.prenom")
+    @Mapping(target = "donneurNom", source = "donneur.utilisateur.nom")
     @Mapping(target = "centreId", source = "centre.id")
     RendezVousResponseDto toResponseDto(RendezVous entity);
 }

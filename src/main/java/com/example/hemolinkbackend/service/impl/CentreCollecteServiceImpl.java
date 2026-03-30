@@ -27,7 +27,6 @@
         public CentreCollecteResponseDto creer(CentreCollecteDto dto) {
             log.info("Création d'un centre de collecte: {}", dto.nom());
             CentreCollecte centre = centreCollecteMapper.toEntity(dto);
-            centre.initializeLocalization();
 
             if (centre.getHoraires() == null || centre.getHoraires().isEmpty()) {
                 for (java.time.DayOfWeek day : java.time.DayOfWeek.values()) {
@@ -74,7 +73,6 @@
             log.info("Mise à jour du centre ID: {}", id);
             CentreCollecte centre = getEntityById(id);
             centreCollecteMapper.updateEntity(dto, centre);
-            centre.initializeLocalization();
 
             if (dto.horaires() != null) {
                 centre.getHoraires().clear();

@@ -13,7 +13,6 @@ public interface RendezVousRepository extends JpaRepository<RendezVous, Long> {
 
     List<RendezVous> findByCentreIdAndDateRendezVousBetween(Long centreId, LocalDateTime debut, LocalDateTime fin);
 
-    List<RendezVous> findByStatutAndDateRendezVousBetween(StatutRendezVous statut, LocalDateTime debut, LocalDateTime fin);
 
     boolean existsByDonneurIdAndDateRendezVousBetween(Long donneurId, LocalDateTime debut, LocalDateTime fin);
 }

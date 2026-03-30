@@ -19,5 +19,12 @@ public interface DonneurMapper {
     void updateEntity(DonneurDto dto, @MappingTarget Donneur entity);
 
     @Mapping(target = "utilisateurId", source = "utilisateur.id")
+    @Mapping(target = "prenom", source = "utilisateur.prenom")
+    @Mapping(target = "nom", source = "utilisateur.nom")
+    @Mapping(target = "email", source = "utilisateur.email")
+    @Mapping(target = "telephone", source = "utilisateur.telephone")
+    @Mapping(target = "actif", source = "utilisateur.actif")
+    @Mapping(target = "creeLe", source = "utilisateur.creeLe")
     DonneurResponseDto toResponseDto(Donneur entity);
 }
+

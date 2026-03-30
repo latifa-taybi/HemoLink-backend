@@ -17,9 +17,7 @@ public interface PocheSangRepository extends JpaRepository<PocheSang, Long> {
 
     List<PocheSang> findByStatutAndGroupeSanguinOrderByDateExpirationAsc(StatutSang statut, GroupeSanguin groupeSanguin);
 
-    List<PocheSang> findByStatutAndDateExpirationBefore(StatutSang statut, LocalDate date);
 
-    long countByStatutAndGroupeSanguin(StatutSang statut, GroupeSanguin groupeSanguin);
 
     @Query("""
             select p

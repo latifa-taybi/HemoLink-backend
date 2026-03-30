@@ -6,6 +6,9 @@ import com.example.hemolinkbackend.entity.Donneur;
 import com.example.hemolinkbackend.enums.GroupeSanguin;
 import com.example.hemolinkbackend.mapper.DonneurMapper;
 import com.example.hemolinkbackend.repository.DonneurRepository;
+import com.example.hemolinkbackend.repository.UtilisateurRepository;
+import com.example.hemolinkbackend.entity.Utilisateur;
+import com.example.hemolinkbackend.enums.RoleUtilisateur;
 import com.example.hemolinkbackend.service.DonService;
 import com.example.hemolinkbackend.service.DonneurService;
 import com.example.hemolinkbackend.service.exception.RessourceNonTrouveeException;
@@ -29,6 +32,7 @@ public class DonneurServiceImpl implements DonneurService {
     private final DonneurRepository donneurRepository;
     private final DonneurMapper donneurMapper;
     private final DonService donService;
+    private final UtilisateurRepository utilisateurRepository;
 
     @Override
     public DonneurResponseDto creer(DonneurDto dto) {
@@ -112,14 +116,23 @@ public class DonneurServiceImpl implements DonneurService {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public DonneurResponseDto getByUtilisateurId(Long utilisateurId) {
         log.debug("Récupération du donneur par utilisateur ID: {}", utilisateurId);
-        return donneurRepository.findAll()
-                .stream()
-                .findFirst()
+        return donneurRepository.findByUtilisateurId(utilisateurId)
                 .map(donneurMapper::toResponseDto)
-                .orElseThrow(() -> new RessourceNonTrouveeException("Donneur non trouvé"));
+                .orElseGet(() -> {
+                    Utilisateur u = utilisateurRepository.findById(utilisateurId)
+                            .orElseThrow(() -> new RessourceNonTrouveeException("Utilisateur non trouvé : " + utilisateurId));
+                    if (u.getRole() == RoleUtilisateur.DONNEUR) {
+                        log.info("Création automatique du profil donneur manquant pour l'utilisateur ID: {}", utilisateurId);
+                        Donneur newDonneur = new Donneur();
+                        newDonneur.setUtilisateur(u);
+                        newDonneur.setNombreDonsAnnuel(0);
+                        return donneurMapper.toResponseDto(donneurRepository.save(newDonneur));
+                    }
+                    throw new RessourceNonTrouveeException("Donneur non trouvé pour l'utilisateur : " + utilisateurId);
+                });
     }
 
     private Donneur getEntityById(Long id) {

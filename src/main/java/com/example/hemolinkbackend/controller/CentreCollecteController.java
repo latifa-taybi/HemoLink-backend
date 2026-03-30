@@ -42,8 +42,7 @@ public class CentreCollecteController {
     }
 
     @GetMapping
-    public List<CentreCollecteResponseDto> getAll(@RequestParam(required = false) String ville,
-                                                  @RequestParam(required = false) String nom) {
+    public List<CentreCollecteResponseDto> getAll(@RequestParam(required = false) String ville, @RequestParam(required = false) String nom) {
         if (ville != null && !ville.isBlank()) {
             return centreCollecteService.rechercherParVille(ville);
         }
@@ -54,8 +53,7 @@ public class CentreCollecteController {
     }
 
     @GetMapping("/proches")
-    public List<CentreCollecteResponseDto> rechercherPlusProches(@RequestParam Double latitude,
-                                                                 @RequestParam Double longitude) {
+    public List<CentreCollecteResponseDto> rechercherPlusProches(@RequestParam Double latitude, @RequestParam Double longitude) {
         return centreCollecteService.rechercherPlusProches(latitude, longitude);
     }
 

@@ -17,13 +17,19 @@ public class JwtTokenProvider {
     @Value("${jwt.expiration}")
     private long jwtExpiration;
 
-    public String generateToken(String email, String role) {
+    public String generateToken(Long id, String email, String role, String prenom, String nom) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpiration);
 
         return Jwts.builder()
                 .subject(email)
+                .id(String.valueOf(id))
+                .claim("userId", id)
+                .claim("id", id)
                 .claim("role", role)
+                .claim("prenom", prenom)
+                .claim("nom", nom)
+                .claim("email", email)
                 .issuedAt(now)
                 .expiration(expiryDate)
                 .signWith(Keys.hmacShaKeyFor(jwtSecret.getBytes()))
