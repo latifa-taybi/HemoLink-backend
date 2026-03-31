@@ -42,8 +42,15 @@ jobs:
         distribution: 'temurin'
         cache: maven
 
-    - name: Build and Test with Maven
-      run: mvn -B clean verify --file pom.xml
+    - name: Compile with Maven
+      run: mvn -B clean compile --file pom.xml
+      env:
+        SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/HemoLink
+        SPRING_DATASOURCE_USERNAME: postgres
+        SPRING_DATASOURCE_PASSWORD: admin
+
+    - name: Run Tests and Verify
+      run: mvn -B verify --file pom.xml
       env:
         SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/HemoLink
         SPRING_DATASOURCE_USERNAME: postgres
