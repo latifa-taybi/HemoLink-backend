@@ -1,2 +1,2 @@
-CREATE EXTENSION IF NOT EXISTS postgis;
-
+-- schema.sql
+-- Extension removed as per user request to simplify CI build

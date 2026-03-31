@@ -1,10 +1,8 @@
 -- Migration: Augmenter la limite de horairesOuverture
 -- Date: 2026-03-27
--- Description: Change VARCHAR(255) to TEXT pour accepter les horaires JSON complets des 7 jours
+-- Description: Standardized for PostgreSQL (ALTER COLUMN ... TYPE TEXT)
 
 ALTER TABLE centre_collecte
-MODIFY COLUMN horaires_ouverture TEXT;
+ALTER COLUMN horaires_ouverture TYPE TEXT;
 
--- Vérifier le changement
-DESCRIBE centre_collecte;
-
+-- PostgreSQL doesn't use DESCRIBE, we can check via information_schema or \d if needed manually
