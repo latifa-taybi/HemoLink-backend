@@ -42,6 +42,8 @@ public class RendezVousController {
                                               @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate jour) {
         if (centreId != null && jour != null) {
             return rendezVousService.getByCentreEtJour(centreId, jour);
+        } else if (centreId != null) {
+            return rendezVousService.getByCentre(centreId);
         }
         return rendezVousService.getAll();
     }

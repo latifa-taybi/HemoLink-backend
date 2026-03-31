@@ -20,5 +20,7 @@ public interface RendezVousService {
 
     List<RendezVousResponseDto> getByDonneur(Long donneurId);
 
+    List<RendezVousResponseDto> getByCentre(Long centreId);
+    
     List<RendezVousResponseDto> getByCentreEtJour(Long centreId, LocalDate jour);
 }

@@ -16,6 +16,7 @@ import com.example.hemolinkbackend.service.exception.RessourceNonTrouveeExceptio
 import com.example.hemolinkbackend.service.support.CompatibiliteSanguineUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
@@ -42,15 +43,17 @@ public class PocheSangServiceImpl implements PocheSangService {
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public PocheSangResponseDto creerDepuisDon(Long donId) {
         Don don = getDonById(donId);
         Donneur donneur = don.getDonneur();
-        if (donneur == null || donneur.getGroupeSanguin() == null) {
-            throw new RegleMetierException("Impossible de creer une poche sans groupe sanguin donneur.");
-        }
+        
+        // If no blood group on donor profile, create bag with EN_ATTENTE_TEST but without group
+        GroupeSanguin groupeSanguin = (donneur != null) ? donneur.getGroupeSanguin() : null;
+        
         PocheSang pocheSang = new PocheSang();
         pocheSang.setDon(don);
-        pocheSang.setGroupeSanguin(donneur.getGroupeSanguin());
+        pocheSang.setGroupeSanguin(groupeSanguin); // may be null - lab will fill it after testing
         pocheSang.setDateCollecte(don.getDateDon().toLocalDate());
         pocheSang.setDateExpiration(don.getDateDon().toLocalDate().plusDays(DUREE_CONSERVATION_JOURS));
         pocheSang.setStatut(StatutSang.EN_ATTENTE_TEST);

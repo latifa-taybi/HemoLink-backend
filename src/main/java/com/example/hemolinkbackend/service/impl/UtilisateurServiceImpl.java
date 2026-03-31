@@ -8,11 +8,14 @@ import com.example.hemolinkbackend.entity.Donneur;
 import com.example.hemolinkbackend.enums.RoleUtilisateur;
 import com.example.hemolinkbackend.mapper.UtilisateurMapper;
 import com.example.hemolinkbackend.repository.DonneurRepository;
+import com.example.hemolinkbackend.repository.NotificationRepository;
+import com.example.hemolinkbackend.repository.RefreshTokenRepository;
 import com.example.hemolinkbackend.repository.UtilisateurRepository;
 import com.example.hemolinkbackend.service.UtilisateurService;
 import com.example.hemolinkbackend.service.exception.RegleMetierException;
 import com.example.hemolinkbackend.service.exception.RessourceNonTrouveeException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +30,8 @@ public class UtilisateurServiceImpl implements UtilisateurService {
 
     private final UtilisateurRepository utilisateurRepository;
     private final DonneurRepository donneurRepository;
+    private final NotificationRepository notificationRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
     private final UtilisateurMapper utilisateurMapper;
     private final PasswordEncoder passwordEncoder;
 
@@ -136,7 +141,22 @@ public class UtilisateurServiceImpl implements UtilisateurService {
 
     @Override
     public void supprimer(Long id) {
-        utilisateurRepository.delete(getEntityById(id));
+        Utilisateur utilisateur = getEntityById(id);
+        try {
+            // Supprimer les dépendances inoffensives
+            refreshTokenRepository.deleteByUtilisateurId(id);
+            notificationRepository.deleteByUtilisateurId(id);
+            
+            // Essayer de supprimer le profil Donneur s'il existe et s'il n'a pas de dons
+            donneurRepository.findByUtilisateurId(id).ifPresent(donneur -> {
+                donneurRepository.delete(donneur);
+            });
+            
+            utilisateurRepository.delete(utilisateur);
+            utilisateurRepository.flush(); // Pour forcer l'exception si contrainte FK non respectée
+        } catch (DataIntegrityViolationException e) {
+            throw new RegleMetierException("Cet utilisateur possède des données indélébiles (Dons, Rendez-vous). Veuillez plutôt désactiver le compte.");
+        }
     }
 
     private Utilisateur getEntityById(Long id) {

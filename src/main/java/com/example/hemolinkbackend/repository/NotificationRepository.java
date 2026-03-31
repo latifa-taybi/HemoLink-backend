@@ -12,5 +12,7 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
     List<Notification> findByUtilisateurIdAndLuFalseOrderByCreeLeDesc(Long utilisateurId);
 
     long countByUtilisateurIdAndLuFalse(Long utilisateurId);
+
+    void deleteByUtilisateurId(Long utilisateurId);
 }
 

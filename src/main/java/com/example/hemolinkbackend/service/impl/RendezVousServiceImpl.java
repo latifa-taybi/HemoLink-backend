@@ -101,6 +101,15 @@ public class RendezVousServiceImpl implements RendezVousService {
 
     @Override
     @Transactional(readOnly = true)
+    public List<RendezVousResponseDto> getByCentre(Long centreId) {
+        return rendezVousRepository.findByCentreIdOrderByDateRendezVousDesc(centreId)
+                .stream()
+                .map(rendezVousMapper::toResponseDto)
+                .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public List<RendezVousResponseDto> getByCentreEtJour(Long centreId, LocalDate jour) {
         LocalDateTime debut = LocalDateTime.of(jour, LocalTime.MIN);
         LocalDateTime fin = LocalDateTime.of(jour, LocalTime.MAX);

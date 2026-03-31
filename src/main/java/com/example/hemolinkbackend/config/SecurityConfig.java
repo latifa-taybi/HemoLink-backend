@@ -37,6 +37,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PATCH, "/api/commandes-sang/**").hasRole("TECHNICIEN_LABO")
                         .requestMatchers(HttpMethod.GET, "/api/commandes-sang/**").hasAnyRole("PERSONNEL_HOPITAL", "TECHNICIEN_LABO", "ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/dons/**").hasRole("PERSONNEL_CENTRE")
+                        .requestMatchers(HttpMethod.GET, "/api/dons/donneur/**").hasAnyRole("DONNEUR", "PERSONNEL_CENTRE", "TECHNICIEN_LABO", "ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/dons/**").hasAnyRole("PERSONNEL_CENTRE", "TECHNICIEN_LABO", "ADMIN")
                         .requestMatchers("/api/tests-labo/**").hasRole("TECHNICIEN_LABO")
                         .requestMatchers("/api/poches-sang/**").hasAnyRole("TECHNICIEN_LABO", "ADMIN")
