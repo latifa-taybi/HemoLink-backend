@@ -153,6 +153,19 @@ public class DonServiceImpl implements DonService {
     @Transactional(readOnly = true)
     public boolean verifierEligibilite(Long donneurId) {
         log.debug("Vérification d'éligibilité du donneur ID: {}", donneurId);
+        
+        // 1. Quota annuel
+        if (compterDonsAnneeEnCours(donneurId) >= QUOTA_ANNUEL) {
+            return false;
+        }
+        
+        // 2. Délai de carence (8 semaines)
+        LocalDate dernierDon = getDerniereDateDon(donneurId);
+        if (dernierDon != null) {
+            return dernierDon.plusWeeks(DELAI_CARENCE_SEMAINES).isBefore(LocalDate.now()) || 
+                   dernierDon.plusWeeks(DELAI_CARENCE_SEMAINES).isEqual(LocalDate.now());
+        }
+        
         return true;
     }
 
@@ -160,7 +173,29 @@ public class DonServiceImpl implements DonService {
     @Transactional(readOnly = true)
     public LocalDate calculerProchaineDateEligible(Long donneurId) {
         log.debug("Calcul de la prochaine date éligible pour donneur ID: {}", donneurId);
-        return LocalDate.now();
+        
+        // Si quota annuel atteint, prochain don possible l'année prochaine
+        if (compterDonsAnneeEnCours(donneurId) >= QUOTA_ANNUEL) {
+            return LocalDate.now().withDayOfYear(1).plusYears(1);
+        }
+        
+        LocalDate dernierDon = getDerniereDateDon(donneurId);
+        if (dernierDon == null) {
+            return LocalDate.now();
+        }
+        
+        LocalDate prochainDelai = dernierDon.plusWeeks(DELAI_CARENCE_SEMAINES);
+        return prochainDelai.isBefore(LocalDate.now()) ? LocalDate.now() : prochainDelai;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public LocalDate getDerniereDateDon(Long donneurId) {
+        return donRepository.findByDonneurIdOrderByDateDonDesc(donneurId)
+                .stream()
+                .findFirst()
+                .map(don -> don.getDateDon().toLocalDate())
+                .orElse(null);
     }
 
     private Don getEntityById(Long id) {

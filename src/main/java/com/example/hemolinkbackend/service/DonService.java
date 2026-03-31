@@ -26,4 +26,6 @@ public interface DonService {
     boolean verifierEligibilite(Long donneurId);
 
     LocalDate calculerProchaineDateEligible(Long donneurId);
+    
+    LocalDate getDerniereDateDon(Long donneurId);
 }

@@ -75,14 +75,14 @@ public class DonneurServiceImpl implements DonneurService {
     @Transactional(readOnly = true)
     public boolean verifierEligibilite(Long donneurId) {
         log.debug("Vérification d'éligibilité du donneur ID: {}", donneurId);
-        return true;
+        return donService.verifierEligibilite(donneurId);
     }
 
     @Override
     @Transactional(readOnly = true)
     public LocalDate calculerProchaineDateEligible(Long donneurId) {
         log.debug("Calcul de la prochaine date éligible pour donneur ID: {}", donneurId);
-        return LocalDate.now();
+        return donService.calculerProchaineDateEligible(donneurId);
     }
 
     @Override
